@@ -39,13 +39,6 @@ typedef enum EStatus {
     DISPONIVEL
 } Status;
 
-typedef struct SHash
-{
-    Status status;
-    char isbn[TAM_CHAVE];
-    int rrn;
-} Hash;
-
 #define TAM_HASH (2 * sizeof(int) + sizeof(char) * TAM_CHAVE)
 
 /********************************PROTOTIPOS************************************/
@@ -90,7 +83,17 @@ int main()
             }
             case 2:
             {
+                arqRemover = abrirArquivo(ARQ_REMOVE, "r+b");
+                arqHash = abrirArquivo(ARQ_HASH, "r+b");
+
                 remover(arqRemover, arqHash);
+
+                printf("epa! ");
+
+                fecharArquivo(arqRemover);
+                fecharArquivo(arqHash);
+                printf("epa2! ");
+
                 break;
             }
             case 3:
@@ -100,6 +103,7 @@ int main()
             }
             case 0:
             {
+                fecharArquivo(arqRemover);
                 exit(0);
             }
             default:
@@ -151,6 +155,8 @@ void obterRegistro(FILE *arq, Livro *livro, char chave[TAM_CHAVE], char tipoArq)
         rewind(arq);
         ct++;
 
+        printf("chavezinha pae: %s\n", chave);
+
         fseek(arq, 1, SEEK_SET);
         fwrite(&ct, sizeof(int), 1, arq);
     }
@@ -171,44 +177,32 @@ void obterRegistro(FILE *arq, Livro *livro, char chave[TAM_CHAVE], char tipoArq)
 }
 
 int calcularEnderecoHash(char chave[TAM_CHAVE]) {
-    int soma = 0, endereco;
-    long offset;
-    int chaveAnterior, chaveProxima;
+    double soma = 0, res;
+    char *ptr;
+    soma = strtod(chave, &ptr);
 
-    int divisor = 199;
+    res = fmod(soma, QTD_ENDERECOS);
 
-    int j = 0;
-
-    while (j < TAM_CHAVE - 2) {
-        chaveAnterior = chave[j] - 48; //ou pegar ascii - 48
-        chaveProxima = chave[j + 1] - 48;
-        soma = (soma + 10 * chaveAnterior + chaveProxima) % divisor;
-        j += 2;
-    }
-
-    chaveAnterior = (chave[TAM_CHAVE - 2] - 48) * 10;
-    soma += chaveAnterior;
-    soma = soma % divisor;
-
-    endereco = soma % QTD_ENDERECOS;
-
-    return endereco;
+    return (int) res;
 }
 
 void inicializarArquivoHash(FILE *arqHash) {
-    Hash hash[QTD_ENDERECOS];
+    char isbn[TAM_CHAVE];
+    int rrn;
+    Status status;
+
     int i, j;
 
     for(i = 0; i < QTD_ENDERECOS; i++) {
-        hash[i].status = VAZIO;
-        for (j = 0; j < TAM_CHAVE - 1; j++) hash[i].isbn[j] = '@';
-        hash[i].isbn[TAM_CHAVE - 1] = '\0';
-        hash[i].rrn = 1;
+        status = VAZIO;
+        for (j = 0; j < TAM_CHAVE - 1; j++) isbn[j] = '@';
+        isbn[TAM_CHAVE - 1] = '\0';
+        rrn = -1;
 
-        fwrite(&hash->status, sizeof(int), 1, arqHash);
-        fwrite(hash->isbn, sizeof(char), TAM_CHAVE, arqHash);
-        fwrite(&hash->rrn, sizeof(int), 1, arqHash);
-    };
+        fwrite(&status, sizeof(int), 1, arqHash);
+        fwrite(isbn, sizeof(char), TAM_CHAVE, arqHash);
+        fwrite(&rrn, sizeof(int), 1, arqHash);
+    }
 
     rewind(arqHash);
 
@@ -216,7 +210,7 @@ void inicializarArquivoHash(FILE *arqHash) {
 }
 
 void inserir(FILE *arqInserir, FILE *arqDados, FILE *arqHash) {
-    int tam, endereco, ctColisao = 1;
+    int endereco, ctColisao = 1;
 
     unsigned long offset, rrn;
     Status status;
@@ -295,60 +289,67 @@ void inserir(FILE *arqInserir, FILE *arqDados, FILE *arqHash) {
 }
 
 void remover (FILE *arqRemover, FILE *arqHash) {
-    char chave[TAM_CHAVE], chaveArqHash[TAM_CHAVE];
-    unsigned long offset;
-    int endereco;
+    char *chave = (char *)calloc(sizeof(char), TAM_CHAVE);
+    char *chaveArqHash = (char *)calloc(sizeof(char), TAM_CHAVE);
 
-    const int retornar = sizeof(int) + TAM_CHAVE;
-    int status, rrn;
+    int endereco, offset;
 
-    arqRemover = abrirArquivo(ARQ_REMOVE, "r+b");
-    arqHash = abrirArquivo(ARQ_HASH, "r+b");
+    int rrn = 0;
+    Status status;
 
     obterRegistro(arqRemover, NULL, chave, 'r');
 
     endereco = calcularEnderecoHash(chave);
     offset = endereco * TAM_HASH;
 
-    fseek(arqHash, (long) offset, SEEK_SET);
+    printf("chave q ta querendo remover: %s\n", chave);
+
+    printf("%d\n", offset);
+    fseek(arqHash, offset, SEEK_SET);
+    printf("%d\n", offset);
 
     while (1) {
-        fseek(arqHash, sizeof (int), SEEK_CUR);
+    	printf("%lu\n", ftell(arqHash));
 
-        if(ftell(arqHash) > (TAM_HASH * QTD_ENDERECOS)) {
-            printf("ERRO: Registro nao encontrado.\n");
+        if(ftell(arqHash) == (TAM_HASH * QTD_ENDERECOS)) {
+            printf("ERRO: Registro nao encontrado!\n");
             break;
         }
 
+        fseek(arqHash, sizeof (int), SEEK_CUR);
+
+        printf("ftellzada: %ld\n", ftell(arqHash));
+
         fread(chaveArqHash, TAM_CHAVE, 1, arqHash);
+
+        printf("chave arq hash: %s\n", chaveArqHash);
 
         if(strcmp(chave, chaveArqHash) != 0) {
             fseek(arqHash, sizeof(int), 1);
             continue;
         }
 
-        fseek(arqHash, -retornar, SEEK_CUR);
+        fseek(arqHash, -18, SEEK_CUR);
 
         status = DISPONIVEL;
-        rrn = 0;
+        rrn = -1;
 
         fwrite(&status, sizeof(int), 1, arqHash);
-        fwrite("@@@@@@@@@@@@@", 1, TAM_CHAVE, arqHash);
+        fwrite("@@@@@@@@@@@@@", sizeof(char), TAM_CHAVE, arqHash);
         fwrite(&rrn, sizeof(int), 1, arqHash);
 
         break;
     }
-
-    fecharArquivo(arqRemover);
-    fecharArquivo(arqHash);
 }
 
 void buscar(FILE *arqBuscar, FILE *arqHash, FILE *arqDados) {
-    char chave[TAM_CHAVE], chaveArqHash[TAM_CHAVE];
-    unsigned long offset;
-    int endereco, ctAcessos = 1;
+    char *chave = (char *)calloc(sizeof(char), TAM_CHAVE);
+    char *chaveArqHash = (char *)calloc(sizeof(char), TAM_CHAVE);
 
-    char *token, buffer[sizeof(Livro)];
+    int offset, endereco, ctAcessos;
+
+    char *token;
+    char buffer[sizeof(Livro)];
 
     Livro livro;
     Status status;
@@ -356,16 +357,18 @@ void buscar(FILE *arqBuscar, FILE *arqHash, FILE *arqDados) {
 
     arqBuscar = abrirArquivo(ARQ_BUSCA, "r+b");
     arqHash = abrirArquivo(ARQ_HASH, "r+b");
+    arqDados = abrirArquivo(ARQ_DADOS, "r+b");
 
     obterRegistro(arqBuscar, NULL, chave, 'b');
 
     endereco = calcularEnderecoHash(chave);
     offset = endereco * TAM_HASH;
 
-    fseek(arqHash, (long) offset, SEEK_SET);
+    fseek(arqHash, offset, SEEK_SET);
 
+    ctAcessos = 1;
     while (1) {
-        if(ftell(arqHash) > (TAM_HASH * QTD_ENDERECOS)) {
+        if(ftell(arqHash) == (TAM_HASH * QTD_ENDERECOS)) {
             printf("ERRO: Registro nao encontrado!\n");
             break;
         }
@@ -379,17 +382,15 @@ void buscar(FILE *arqBuscar, FILE *arqHash, FILE *arqDados) {
 
         fread(chaveArqHash, TAM_CHAVE, 1, arqHash);
 
-        printf("chave arq hash: %s\n", chaveArqHash);
-
         if((strcmp(chave, chaveArqHash)) == 0) {
             fread(&rrn, sizeof(int), 1, arqHash);
 
-            ctAcessos > 1 ? printf("Chave %s encontrada, endereco %d, %d acesso\n", chave, endereco, ctAcessos)
-            : printf("Chave %s encontrada, endereco %d, %d acessos\n", chave, endereco, ctAcessos);
+            ctAcessos > 1 ?
+            printf("Chave %s encontrada, endereco %d, %d acessos\n", chave, endereco, ctAcessos)
+            : printf("Chave %s encontrada, endereco %d, %d acesso\n", chave, endereco, ctAcessos);
 
-            arqDados = abrirArquivo(ARQ_DADOS, "r+b");
             fseek(arqDados, rrn * sizeof(Livro),SEEK_SET);
-            fread(buffer, sizeof(livro), 1, arqDados);
+            fread(buffer, sizeof(Livro), 1, arqDados);
 
             token = strtok(buffer, "#");
             strcpy(livro.isbn, token);
@@ -401,10 +402,12 @@ void buscar(FILE *arqBuscar, FILE *arqHash, FILE *arqDados) {
             strcpy(livro.ano, token);
             printf("\n*---------------------------------------------*\n");
             printf("ISBN: %s\nTITULO: %s\nAUTOR: %s\nANO: %s\n", livro.isbn, livro.titulo, livro.autor, livro.ano);
-            printf("\n*---------------------------------------------*");
+            printf("*---------------------------------------------*\n");
 
             break;
         } else {
+            printf("chave arq hash: %s\n", chaveArqHash);
+            printf("passou no else!\n");
             fseek(arqHash, sizeof(int), SEEK_CUR);
             ctAcessos++;
         }
@@ -412,4 +415,5 @@ void buscar(FILE *arqBuscar, FILE *arqHash, FILE *arqDados) {
 
     fecharArquivo(arqHash);
     fecharArquivo(arqBuscar);
+    fecharArquivo(arqDados);
 }
