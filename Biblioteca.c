@@ -46,8 +46,7 @@ int main(void) {
 
     puts("*-------- BIBLIOTECA --------*");
 
-    do
-    {
+    do {
         puts("*______________________________________________*");
         puts("|  Opcao      | Funcao                         |");
         puts("|    1.       | Inserir                        |");
@@ -58,15 +57,11 @@ int main(void) {
         printf("Digite a opcao: ");
         scanf("%d", &op);
 
-        switch (op)
-        {
+        switch (op) {
             case 1:
-            {
                 inserir(arqInserir, arqDados, arqHash);
                 break;
-            }
             case 2:
-            {
                 arqRemover = abrirArquivo(ARQ_REMOVE, "r+b");
                 arqHash = abrirArquivo(ARQ_HASH, "r+b");
 
@@ -76,17 +71,12 @@ int main(void) {
                 fecharArquivo(arqHash);
 
                 break;
-            }
             case 3:
-            {
                 buscar(arqBusca, arqHash, arqDados);
                 break;
-            }
             case 0:
-            {
                 fecharArquivo(arqRemover);
                 exit(0);
-            }
             default:
                 printf("Digite uma das opcoes\n");
         }
