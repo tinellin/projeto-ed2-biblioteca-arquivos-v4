@@ -13,15 +13,14 @@
 #define QTD_ENDERECOS 31
 #define TAM_CHAVE 14
 
-typedef struct SLivro
-{
+typedef struct {
     char isbn[TAM_CHAVE];
     char titulo[50];
     char autor[50];
     char ano[5];
 } Livro;
 
-typedef enum EStatus {
+typedef enum {
     VAZIO = 0,
     INDISPONIVEL,
     DISPONIVEL
