@@ -38,10 +38,11 @@ void remover(FILE *, FILE *);
 void buscar(FILE *, FILE *, FILE *);
 
 int main(void) {
-    setlocale(LC_ALL, "");
-
     FILE *arqInserir = NULL, *arqDados = NULL, *arqHash = NULL, *arqBusca = NULL, *arqRemover = NULL;
     int op;
+    
+    setlocale(LC_ALL, "");
+
 
     printf("*-------- BIBLIOTECA --------*\n");
 
