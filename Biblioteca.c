@@ -37,8 +37,7 @@ void inserir(FILE *, FILE *, FILE *);
 void remover(FILE *, FILE *);
 void buscar(FILE *, FILE *, FILE *);
 
-int main(void)
-{
+int main(void) {
     setlocale(LC_ALL, "");
 
     FILE *arqInserir = NULL, *arqDados = NULL, *arqHash = NULL, *arqBusca = NULL, *arqRemover = NULL;
