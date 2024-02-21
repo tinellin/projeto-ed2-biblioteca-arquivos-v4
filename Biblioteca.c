@@ -4,9 +4,6 @@
 #include <string.h>
 #include <math.h>
 
-/*********************************CONSTANTES***********************************/
-/* Alterar aqui, caso seja necessario */
-
 #define ARQ_INSERE "arquivos/insere.bin"
 #define ARQ_DADOS "arquivos/dados.bin"
 #define ARQ_HASH "arquivos/hash.bin"
@@ -16,7 +13,6 @@
 #define QTD_ENDERECOS 31
 #define TAM_CHAVE 14
 
-/*********************************ESTRUTURAS***********************************/
 typedef struct SLivro
 {
     char isbn[TAM_CHAVE];
@@ -33,7 +29,6 @@ typedef enum EStatus {
 
 #define TAM_HASH (2 * sizeof(int) + sizeof(char) * TAM_CHAVE)
 
-/********************************PROTOTIPOS************************************/
 FILE *abrirArquivo(char *, char *);
 void fecharArquivo(FILE *);
 void obterRegistro(FILE *, Livro *, char[TAM_CHAVE], char);
@@ -43,7 +38,6 @@ void inserir(FILE *, FILE *, FILE *);
 void remover(FILE *, FILE *);
 void buscar(FILE *, FILE *, FILE *);
 
-/**********************************MAIN****************************************/
 int main(void)
 {
     setlocale(LC_ALL, "");
@@ -51,7 +45,6 @@ int main(void)
     FILE *arqInserir = NULL, *arqDados = NULL, *arqHash = NULL, *arqBusca = NULL, *arqRemover = NULL;
     int op;
 
-    // Menu
     printf("*-------- BIBLIOTECA --------*\n");
 
     do
@@ -102,7 +95,6 @@ int main(void)
     return 0;
 }
 
-/*********************************FUNCOES**************************************/
 
 FILE *abrirArquivo(char *ch, char *tipoAbertura)
 {
