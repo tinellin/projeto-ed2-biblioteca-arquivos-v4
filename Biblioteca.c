@@ -44,17 +44,17 @@ int main(void) {
     setlocale(LC_ALL, "");
 
 
-    printf("*-------- BIBLIOTECA --------*\n");
+    puts("*-------- BIBLIOTECA --------*");
 
     do
     {
-        printf("*______________________________________________*\n");
-        printf("|  Opcao      | Funcao                         |\n");
-        printf("|    1.       | Inserir                        |\n");
-        printf("|    2.       | Remover                        |\n");
-        printf("|    3.       | Buscar                         |\n");
-        printf("|    0.       | Sair do programa               |\n");
-        printf("*----------------------------------------------*\n");
+        puts("*______________________________________________*");
+        puts("|  Opcao      | Funcao                         |");
+        puts("|    1.       | Inserir                        |");
+        puts("|    2.       | Remover                        |");
+        puts("|    3.       | Buscar                         |");
+        puts("|    0.       | Sair do programa               |");
+        puts("*----------------------------------------------*");
         printf("Digite a opcao: ");
         scanf("%d", &op);
 
