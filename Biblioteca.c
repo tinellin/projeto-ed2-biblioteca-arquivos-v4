@@ -34,14 +34,14 @@ typedef enum EStatus {
 #define TAM_HASH (2 * sizeof(int) + sizeof(char) * TAM_CHAVE)
 
 /********************************PROTOTIPOS************************************/
-FILE *abrirArquivo(char *ch, char *tipoAbertura);
-void fecharArquivo(FILE *arq);
-void obterRegistro(FILE *arq, Livro *livro, char chave[TAM_CHAVE], char tipoArq);
-void inicializarArquivoHash(FILE *arqHash);
-int calcularEnderecoHash(char chave[TAM_CHAVE]);
-void inserir(FILE *arqInserir, FILE *arqDados, FILE *arqHash);
-void remover(FILE *arqRemover, FILE *arqHash);
-void buscar(FILE *arqBuscar, FILE *arqHash, FILE *arqDados);
+FILE *abrirArquivo(char *, char *);
+void fecharArquivo(FILE *);
+void obterRegistro(FILE *, Livro *, char[TAM_CHAVE], char);
+void inicializarArquivoHash(FILE *);
+int calcularEnderecoHash(char[TAM_CHAVE]);
+void inserir(FILE *, FILE *, FILE *);
+void remover(FILE *, FILE *);
+void buscar(FILE *, FILE *, FILE *);
 
 /**********************************MAIN****************************************/
 int main()
