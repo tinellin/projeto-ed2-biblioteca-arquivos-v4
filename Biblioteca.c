@@ -44,7 +44,7 @@ void remover(FILE *, FILE *);
 void buscar(FILE *, FILE *, FILE *);
 
 /**********************************MAIN****************************************/
-int main()
+int main(void)
 {
     setlocale(LC_ALL, "");
 
@@ -99,6 +99,7 @@ int main()
                 printf("Digite uma das opcoes\n");
         }
     } while (op != 0);
+    return 0;
 }
 
 /*********************************FUNCOES**************************************/
