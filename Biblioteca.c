@@ -7,19 +7,11 @@
 /*********************************CONSTANTES***********************************/
 /* Alterar aqui, caso seja necessario */
 
-// ENZO
-#define ARQ_INSERE "C:\\Users\\steam\\Desktop\\Listas_e_Atividades\\4a_Semestre\\ED2\\Sistema-Biblioteca-V4\\arquivos\\insere.bin"
-#define ARQ_DADOS "C:\\Users\\steam\\Desktop\\Listas_e_Atividades\\4a_Semestre\\ED2\\Sistema-Biblioteca-V4\\arquivos\\dados.bin"
-#define ARQ_HASH "C:\\Users\\steam\\Desktop\\Listas_e_Atividades\\4a_Semestre\\ED2\\Sistema-Biblioteca-V4\\arquivos\\hash.bin"
-#define ARQ_BUSCA "C:\\Users\\steam\\Desktop\\Listas_e_Atividades\\4a_Semestre\\ED2\\Sistema-Biblioteca-V4\\arquivos\\busca.bin"
-#define ARQ_REMOVE "C:\\Users\\steam\\Desktop\\Listas_e_Atividades\\4a_Semestre\\ED2\\Sistema-Biblioteca-V4\\arquivos\\remove.bin"
-
-/*
-// DOUGRINHAS GAMEPLAYS
-#define ARQ_INSERE "C:\\Users\\Douglas Nicida\\Desktop\\projeto-ed2-biblioteca-arquivos-v4-main\\arquivos\\insere.bin"
-#define ARQ_BUSCA "C:\\Users\\Douglas Nicida\\Desktop\\projeto-ed2-biblioteca-arquivos-v4-main\\arquivos\\busca.bin"
-#define ARQ_REMOVE "C:\\Users\\Douglas Nicida\\Desktop\\projeto-ed2-biblioteca-arquivos-v4-main\\arquivos\\remove.bin"
-*/
+#define ARQ_INSERE "arquivos/insere.bin"
+#define ARQ_DADOS "arquivos/dados.bin"
+#define ARQ_HASH "arquivos/hash.bin"
+#define ARQ_BUSCA "arquivos/busca.bin"
+#define ARQ_REMOVE "arquivos/remove.bin"
 
 #define QTD_ENDERECOS 31
 #define TAM_CHAVE 14
