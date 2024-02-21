@@ -36,6 +36,8 @@ int calcularEnderecoHash(char[TAM_CHAVE]);
 void inserir(FILE *, FILE *, FILE *);
 void remover(FILE *, FILE *);
 void buscar(FILE *, FILE *, FILE *);
+int leropcaomenu(void);
+
 
 int main(void) {
 	FILE *arqInserir = NULL, *arqDados = NULL, *arqHash = NULL, *arqBusca = NULL, *arqRemover = NULL;
@@ -55,7 +57,7 @@ int main(void) {
 		puts("| 0.      | Sair do programa                   |");
 		puts("*----------------------------------------------*");
 		printf("Digite a opcao: ");
-		scanf("%d", &op);
+		op = leropcaomenu();
 
 		switch (op) {
 			case 1:
@@ -82,6 +84,22 @@ int main(void) {
 		}
 	} while (op != 0);
 	return 0;
+}
+
+int leropcaomenu(void) {
+	char buffer[10];
+	int loops = 0;
+	while (fgets(buffer, 9, stdin) != NULL) {
+		if (buffer[0] == 0) {
+			return -1;
+		} else if (buffer[1] == 0 || buffer[1] == '\n') {
+			break;
+		} else {
+			if (buffer[strlen(buffer)-1] == '\n')
+				return -1;
+		}
+	}
+	return buffer[0] - 48;
 }
 
 
