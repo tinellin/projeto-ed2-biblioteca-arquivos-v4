@@ -87,8 +87,9 @@ int main(void) {
 }
 
 int leropcaomenu(void) {
-	char buffer[10];
-	while (fgets(buffer, 9, stdin) != NULL) {
+	char buffer[3];
+	char loop = 0;
+	while (fgets(buffer, 3, stdin) != NULL) {
 		if (buffer[0] == 0) {
 			return -1;
 		} else if (buffer[1] == 0 || buffer[1] == '\n') {
@@ -96,8 +97,11 @@ int leropcaomenu(void) {
 		} else {
 			if (buffer[strlen(buffer)-1] == '\n')
 				return -1;
+			loop = 1;
 		}
 	}
+	if (loop)
+		return -1;
 	return buffer[0] - 48;
 }
 
